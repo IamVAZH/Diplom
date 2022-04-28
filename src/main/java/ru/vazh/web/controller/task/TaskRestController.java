@@ -1,4 +1,4 @@
-package ru.vazh.model.controller.task;
+package ru.vazh.web.controller.task;
 
 import ru.vazh.service.TaskService;
 
