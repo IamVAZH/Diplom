@@ -16,4 +16,14 @@
         <url-pattern>/users</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>taskServlet</servlet-name>
+        <servlet-class>ru.vazh.web.TaskServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>taskServlet</servlet-name>
+        <url-pattern>/tasks</url-pattern>
+    </servlet-mapping>
+
 </web-app>
