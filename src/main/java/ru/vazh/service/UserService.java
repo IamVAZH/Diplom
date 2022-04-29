@@ -1,5 +1,6 @@
 package ru.vazh.service;
 
+import org.springframework.stereotype.Service;
 import ru.vazh.model.User;
 import ru.vazh.repository.UserRepository;
 
@@ -8,6 +9,7 @@ import java.util.List;
 import static ru.vazh.util.ValidationUtil.checkNotFound;
 import static ru.vazh.util.ValidationUtil.checkNotFoundWithId;
 
+@Service
 public class UserService {
     private final UserRepository repository;
 

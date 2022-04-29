@@ -1,5 +1,6 @@
 package ru.vazh.repository;
 
+import org.springframework.stereotype.Repository;
 import ru.vazh.model.Task;
 import ru.vazh.util.TaskUtil;
 
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Repository
 public class InMemoryTaskRepository implements TaskRepository {
     private final Map<Integer, Task> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);

@@ -2,6 +2,7 @@ package ru.vazh.web.controller.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import ru.vazh.model.User;
 import ru.vazh.service.UserService;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import static ru.vazh.util.ValidationUtil.assureIdConsistent;
 import static ru.vazh.util.ValidationUtil.checkNew;
 
+@Controller
 public abstract class AbstractUserController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
