@@ -36,7 +36,7 @@ public class TaskServlet extends HttpServlet {
                 request.getParameter("text"));
 
         log.info(task.isNew() ? "Create {}" : "Update {}", task);
-        repository.save(task);
+        repository.save(task, SecurityUtil.authUserId());
         response.sendRedirect("tasks");
     }
 
@@ -48,21 +48,21 @@ public class TaskServlet extends HttpServlet {
             case "delete":
                 int id = getId(request);
                 log.info("Delete {}", id);
-                repository.delete(id);
+                repository.delete(id, SecurityUtil.authUserId());
                 response.sendRedirect("tasks");
                 break;
             case "create":
             case "update":
                 final Task task = "create".equals(action) ?
                         new Task(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", "New_Task") :
-                        repository.get(getId(request));
+                        repository.get(getId(request), SecurityUtil.authUserId());
                 request.setAttribute("task", task);
                 request.getRequestDispatcher("/taskForm.jsp").forward(request, response);
                 break;
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("tasks", repository.getAll());
+                request.setAttribute("tasks", repository.getAll(SecurityUtil.authUserId()));
                 request.getRequestDispatcher("/tasks.jsp").forward(request, response);
                 break;
         }
