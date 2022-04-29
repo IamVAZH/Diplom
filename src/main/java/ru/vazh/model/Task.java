@@ -1,10 +1,9 @@
 package ru.vazh.model;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-public class Task {
-    private Integer id;
-
+public class Task extends AbstractBaseEntity {
     private final LocalDateTime dateTime;
     //Body of task
     private final String text;
@@ -12,26 +11,18 @@ public class Task {
     private final String name;
 
     public Task(Integer id, LocalDateTime dateTime, String name, String text) {
-        this.id = id;
+        super(id);
         this.dateTime = dateTime;
         this.text = text;
         this.name = name;
     }
 
     public Task(LocalDateTime dateTime, String name, String text) {
-        this(null,dateTime,text,name);
+        this(null, dateTime, text, name);
     }
 
     public LocalDateTime getDateTime() {
         return dateTime;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getText() {
@@ -42,8 +33,8 @@ public class Task {
         return name;
     }
 
-    public boolean isNew() {
-        return id == null;
+    public LocalTime getTime() {
+        return dateTime.toLocalTime();
     }
 
     @Override
