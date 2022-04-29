@@ -24,6 +24,13 @@ public class TaskUtil {
             new Task(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", "Task6"),
             new Task(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", "Task7")
     );
+
+    public static List<Task> getFilteredTos(Collection<Task> tasks, LocalTime startTime, LocalTime endTime) {
+        return tasks.stream()
+                .filter(task -> Util.isBetweenHalfOpen(task.getTime(), startTime, endTime))
+                .collect(Collectors.toList());
+    }
+
 /*
     public static List<Task> getTos(Collection<Task> tasks, int caloriesPerDay) {
         return filterByPredicate(tasks, caloriesPerDay, meal -> true);

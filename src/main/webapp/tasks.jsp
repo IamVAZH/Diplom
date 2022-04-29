@@ -24,7 +24,7 @@
             <th></th>
         </tr>
         </thead>
-        <c:forEach items="${tasks}" var="task">
+        <c:forEach items="${requestScope.tasks}" var="task">
             <jsp:useBean id="task" type="ru.vazh.model.Task"/>
             <tr>
                 <td>
