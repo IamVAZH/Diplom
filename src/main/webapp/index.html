@@ -1,15 +1,16 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Diplom</title>
+    <title>Java Enterprise (Topjava)</title>
 </head>
 <body>
-<h3>Проект</h3>
-<hr>
-<ul>
-    <li><a href="users">Users</a></li>
-    <hr>
-    <li><a href="tasks">Tasks</a></li>
-</ul>
+<form method="post" action="users">
+    <b style="font-size: large">Tasks of&nbsp;</b>
+    <select name="userId">
+        <option value="100000">User</option>
+        <option value="100001">Admin</option>
+    </select>
+    <button type="submit">Select</button>
+</form>
 </body>
 </html>
