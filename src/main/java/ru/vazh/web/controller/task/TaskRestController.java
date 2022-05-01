@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.vazh.model.Task;
 import ru.vazh.service.TaskService;
 import ru.vazh.util.TaskUtil;
@@ -20,6 +22,7 @@ import static ru.vazh.util.ValidationUtil.checkNew;
 public class TaskRestController {
     private static final Logger log = LoggerFactory.getLogger(TaskRestController.class);
 
+    static final String REST_URL = "/diplom";
     private final TaskService service;
 
     public TaskRestController(TaskService service) {
