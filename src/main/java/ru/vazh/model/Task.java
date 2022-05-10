@@ -1,5 +1,7 @@
 package ru.vazh.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -18,9 +20,15 @@ public class Task extends AbstractBaseEntity {
     @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;
+    //image for task
+    @Column(name = "img_path")
+    private String img_path;
     //Body of task
     @Column(name = "text", nullable = false)
     private String text;
+    //Short description
+    @Column(name = "short_description", nullable = false)
+    private String shortDescription;
     //Title of task
     @Column(name = "name", nullable = false)
     private String name;
@@ -29,6 +37,12 @@ public class Task extends AbstractBaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
+
+    @Column(name = "audio_path")
+    private String audio_path;
+
+    @Column(name = "video_path")
+    private String video_path;
 
     public Task(Integer id, LocalDateTime dateTime, String name, String text) {
         super(id);
@@ -42,6 +56,51 @@ public class Task extends AbstractBaseEntity {
     }
 
     public Task() {
+    }
+
+    public Task(LocalDateTime dateTime, String img_path, String text, String shortDescription, String name, User user, String audio_path, String video_path) {
+        this(null,dateTime,text,name);
+        this.img_path = img_path;
+        this.shortDescription = shortDescription;
+        this.user = user;
+        this.audio_path = audio_path;
+        this.video_path = video_path;
+    }
+
+    public Task(Integer id, LocalDateTime dateTime, String img_path, String text, String shortDescription, String name, User user, String audio_path, String video_path) {
+        super(id);
+        this.dateTime = dateTime;
+        this.img_path = img_path;
+        this.text = text;
+        this.shortDescription = shortDescription;
+        this.name = name;
+        this.user = user;
+        this.audio_path = audio_path;
+        this.video_path = video_path;
+    }
+
+    public String getImg_path() {
+        return img_path;
+    }
+
+    public void setImg_path(String img_path) {
+        this.img_path = img_path;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDateTime getDateTime() {
@@ -70,6 +129,22 @@ public class Task extends AbstractBaseEntity {
 
     public LocalTime getTime() {
         return dateTime.toLocalTime();
+    }
+
+    public String getAudio_path() {
+        return audio_path;
+    }
+
+    public void setAudio_path(String audio_path) {
+        this.audio_path = audio_path;
+    }
+
+    public String getVideo_path() {
+        return video_path;
+    }
+
+    public void setVideo_path(String video_path) {
+        this.video_path = video_path;
     }
 
     @Override

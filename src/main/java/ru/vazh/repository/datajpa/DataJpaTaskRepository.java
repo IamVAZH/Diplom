@@ -1,7 +1,7 @@
 package ru.vazh.repository.datajpa;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vazh.model.Task;
 import ru.vazh.repository.TaskRepository;
 
@@ -13,14 +13,11 @@ public class DataJpaTaskRepository implements TaskRepository {
 
     private final CrudTaskRepository crudTaskRepository;
 
-    public DataJpaTaskRepository(CrudTaskRepository crudTaskRepository) {
+    private final CrudUserRepository crudUserRepository;
+
+    public DataJpaTaskRepository(CrudTaskRepository crudTaskRepository, CrudUserRepository crudUserRepository) {
         this.crudTaskRepository = crudTaskRepository;
-    }
-
-
-    @Override
-    public Task save(Task task, int userId) {
-        return crudTaskRepository.save(task);
+        this.crudUserRepository = crudUserRepository;
     }
 
     @Override
@@ -30,16 +27,27 @@ public class DataJpaTaskRepository implements TaskRepository {
 
     @Override
     public Task get(int id, int userId) {
-        return null;
+        return crudTaskRepository.findById(id)
+                .filter(task -> task.getUser().getId() == userId)
+                .orElse(null);
     }
 
     @Override
     public List<Task> getAll(int userId) {
-        return null;
+        return crudTaskRepository.getAllByUserId(userId);
     }
 
     @Override
     public List<Task> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return null;
+    }
+
+    @Transactional
+    public Task save(Task task, int userId) {
+        if (!task.isNew() && get(task.getId(), userId) == null) {
+            return null;
+        }
+        task.setUser(crudUserRepository.getOne(userId));
+        return crudTaskRepository.save(task);
     }
 }

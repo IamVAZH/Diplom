@@ -5,6 +5,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vazh.model.User;
 
+import javax.persistence.Entity;
 import javax.persistence.QueryHint;
 
 @Transactional(readOnly = true)
@@ -24,4 +25,8 @@ public interface CrudUserRepository extends JpaRepository<User, Integer> {
     @EntityGraph(attributePaths = {"meals"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT u FROM User u WHERE u.id=?1")
     User getWithMeals(int id);
+
+    @EntityGraph(attributePaths = {"tasks"}, type = EntityGraph.EntityGraphType.LOAD)
+    @Query("select u FROM User u WHERE u.id=?1")
+    User getWithTasks(int id);
 }

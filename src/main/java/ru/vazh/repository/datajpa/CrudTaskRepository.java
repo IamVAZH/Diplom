@@ -12,4 +12,5 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface CrudTaskRepository extends JpaRepository<Task, Integer> {
     List<Task> getAllByUserId(int userId);
+
 }

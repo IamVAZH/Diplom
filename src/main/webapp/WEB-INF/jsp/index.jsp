@@ -1,9 +1,15 @@
-  <%@ page contentType="text/html;charset=UTF-8" %>
-  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-  <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<html>
 
-  <html>
-  <body>
-  <H1>НАЧАЛО ПОЛОЖЕНО</H1>
+
+<jsp:include page="fragments/headTags.jsp"/>
+<body>
+<jsp:include page="fragments/bodyHeader.jsp"/>
+<div class="container">
+    <div class="center2">
+        <a class="btn btn-dark btn-lg" href="${pageContext.request.contextPath}/conseption" role="button">Create</a>
+    </div>
+</div>
 </body>
 </html>
+

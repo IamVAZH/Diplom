@@ -28,9 +28,13 @@ CREATE TABLE tasks
 (
     id          INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
     user_id     INTEGER   NOT NULL,
+    img_path    TEXT      NOT NULL,
     date_time   TIMESTAMP NOT NULL,
     text        TEXT      NOT NULL,
-    name        TEXT       NOT NULL,
+    short_description TEXT NOT NULL,
+    name        TEXT      NOT NULL,
+    audio_path    VARCHAR   NOT NULL,
+    video_path    VARCHAR   NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX tasks_unique_user_datetime_idx ON tasks (user_id, date_time);
