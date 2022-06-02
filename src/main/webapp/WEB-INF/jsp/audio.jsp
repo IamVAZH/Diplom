@@ -40,12 +40,10 @@
 </main>
 <script>
     let blobData = null;
-
     let constraintObj = {
         audio: true,
         video: false
     };
-
     //handle older browsers that might implement getUserMedia in some way
     if (navigator.mediaDevices === undefined) {
         navigator.mediaDevices = {};
@@ -70,17 +68,14 @@
                 console.log(err.name, err.message);
             })
     }
-
     navigator.mediaDevices.getUserMedia(constraintObj)
         .then(function (mediaStreamObj) {
             //connect the media stream to the first video element
             let audio = document.querySelector('audio');
-
             audio.onloadedmetadata = function (ev) {
                 //show in the video element what is being captured by the webcam
                 // audio.play();
             };
-
             //add listeners for saving video/audio
             let start = document.getElementById('btnStart');
             let stop = document.getElementById('btnStop');
@@ -88,7 +83,6 @@
             let audio2 = document.getElementById('vid2');
             let mediaRecorder = new MediaRecorder(mediaStreamObj);
             let chunks = [];
-
             start.addEventListener('click', (ev) => {
                 start.hidden = true;
                 stop.hidden = false;
@@ -117,8 +111,6 @@
         .catch(function (err) {
             console.log(err.name, err.message);
         });
-
-
     async function uploadFileAjax() {
         if (blobData != null) {
             let formData = new FormData();
@@ -129,7 +121,6 @@
             );
             formData.append('audio', myFile);
             formData.append('id', ${id});
-
             $.ajax({
                 url: '${pageContext.request.contextPath}/audio',
                 type: 'POST',
@@ -148,7 +139,6 @@
             window.location.href = "${pageContext.request.contextPath}/tasks";
         }
     }
-
     /*********************************
      getUserMedia returns a Promise
      resolve - returns a MediaStream Object

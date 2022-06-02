@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
 <html>
 <body>
 <section>
@@ -25,12 +24,12 @@
         </dl>
         <dl>
             <lable>Audio:</lable>
-            <audio src="${pageContext.request.contextPath}/${task.audio_path}" controls></audio>
+            <audio src="/diplom/audio/${task.audio_path}" controls></audio>
             <a href="${pageContext.request.contextPath}/audio?id=${task.id}">change audio</a>
         </dl>
         <dl>
             <lable>Video:</lable>
-            <video width="700" controls src="${pageContext.request.contextPath}/${task.video_path}"></video>
+            <video width="700" controls src="/diplom/video/${task.video_path}"></video>
             <a href="${pageContext.request.contextPath}/video?id=${task.id}">change video</a>
         </dl>
         <button type="submit">Submit changes</button>

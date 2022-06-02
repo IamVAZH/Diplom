@@ -34,10 +34,10 @@
     </p>
     <video id="vid1" controls hidden></video>
 
-    <video id="vid2" controls src="${savedVideo}"></video>
+    <video id="vid2" controls src="/diplom/video/${savedVideo}"></video>
     <!-- could save to canvas and do image manipulation and saving too -->
     <input id="ajaxfile" hidden type="file"><br>
-    <button onclick="uploadFileAjax()">Upload</button>
+    <button id="uploadbtn" onclick="uploadFileAjax()">Upload</button>
 </main>
 <script>
     let blobData = null;
@@ -92,7 +92,7 @@
 
             video.onloadedmetadata = function (ev) {
                 //show in the video element what is being captured by the webcam
-                video.pause();
+                video1.pause();
             };
 
             //add listeners for saving video/audio
@@ -100,6 +100,7 @@
             let stop = document.getElementById('btnStop');
             let video1 = document.getElementById('vid1');
             let video2 = document.getElementById('vid2');
+            let uploadbtn = document.getElementById('uploadbtn');
             let mediaRecorder = new MediaRecorder(mediaStreamObj);
             let chunks = [];
 
@@ -108,8 +109,9 @@
                 stop.hidden = false;
                 video2.hidden = true;
                 video1.hidden = false;
+                uploadbtn.hidden = true;
                 video2.pause();
-                video.play();
+                video1.play();
                 // video1.play();
                 mediaRecorder.start();
                 console.log(mediaRecorder.state);
@@ -120,6 +122,7 @@
                 mediaRecorder.stop();
                 video1.pause();
                 video1.hidden = true;
+                uploadbtn.hidden = false;
                 video2.hidden = false;
                 console.log(mediaRecorder.state);
             });

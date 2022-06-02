@@ -1,7 +1,9 @@
 package ru.vazh.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.vazh.model.Task;
 import ru.vazh.model.User;
@@ -13,7 +15,9 @@ import javax.servlet.http.HttpServlet;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +40,8 @@ public class TaskService extends HttpServlet {
         return checkNotFoundWithId(taskRepository.get(id, userId), id);
     }
 
-    public void delete(int id, int userId) {
+    public void delete(int id) {
+        int userId = SecurityUtil.authUserId();
         checkNotFoundWithId(taskRepository.delete(id, userId), id);
     }
 
@@ -59,14 +64,14 @@ public class TaskService extends HttpServlet {
             File uploadDir = new File("/Users/valerijzarkov/Downloads/Diplom/src/main/webapp/resources/files/video");
             String uuidFile = UUID.randomUUID().toString();
             String resultFileName = uuidFile + "." + file.getOriginalFilename();
-            String longPath = "/Users/valerijzarkov/Downloads/Diplom/src/main/webapp/";
+            String longPath = "/Users/valerijzarkov/Downloads/Diplom/src/main/webapp/resources/files/video/";
             Task task = get(id, SecurityUtil.authUserId());
             try {
                 file.transferTo(new File(uploadDir + "/" + resultFileName));
-                if (Files.exists(Paths.get(longPath + task.getVideo_path()))) {
+                if (Files.exists(Paths.get(longPath + task.getVideo_path()))  && !task.getVideo_path().equals("default.mp4")) {
                     Files.delete(Paths.get(longPath + task.getVideo_path()));
                 }
-                task.setVideo_path("resources/files/video/" + resultFileName);
+                task.setVideo_path(resultFileName);
                 taskRepository.save(task, SecurityUtil.authUserId());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -74,38 +79,27 @@ public class TaskService extends HttpServlet {
         }
     }
 
-    public void saveVideo2(MultipartFile file, Integer id) {
-        if (file != null) {
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + "." + file.getOriginalFilename();
-            String longPath = "/Users/valerijzarkov/Downloads/Diplom/src/main/webapp/";
-            Task task = get(id, SecurityUtil.authUserId());
-            try {
-                file.transferTo(new File("/Users/valerijzarkov/Downloads/Diplom/src/main/webapp/resources/files/video" + "/" + resultFileName));
-                if (Files.exists(Paths.get(longPath + task.getVideo_path()))) {
-                    Files.delete(Paths.get(longPath + task.getVideo_path()));
-                }
-                task.setVideo_path("resources/files/video/" + resultFileName);
-                taskRepository.save(task, SecurityUtil.authUserId());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public void saveNameAndText(int id, String name, String text) {
+        Task task = taskRepository.get(id,SecurityUtil.authUserId());
+        task.setName(name);
+        task.setText(text);
+        taskRepository.save(task,SecurityUtil.authUserId());
     }
 
+//    @Transactional
     public void saveAudio(MultipartFile file, Integer id) {
         if (file != null) {
             File uploadDir = new File("/Users/valerijzarkov/Downloads/Diplom/src/main/webapp/resources/files/audio");
             String uuidFile = UUID.randomUUID().toString();
             String resultFileName = uuidFile + "." + file.getOriginalFilename();
-            String longPath = "/Users/valerijzarkov/Downloads/Diplom/src/main/webapp/";
+            String longPath = "/Users/valerijzarkov/Downloads/Diplom/src/main/webapp/resources/files/audio/";
             Task task = get(id, SecurityUtil.authUserId());
             try {
                 file.transferTo(new File(uploadDir + "/" + resultFileName));
-                if (Files.exists(Paths.get(longPath + task.getAudio_path()))) {
+                if (Files.exists(Paths.get(longPath + task.getAudio_path())) && !task.getAudio_path().equals("default.mp3")) {
                     Files.delete(Paths.get(longPath + task.getAudio_path()));
                 }
-                task.setAudio_path("resources/files/audio/" + resultFileName);
+                task.setAudio_path(resultFileName);
                 taskRepository.save(task, SecurityUtil.authUserId());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -128,19 +122,20 @@ public class TaskService extends HttpServlet {
         return task.getImg_path();
     }
 
+//    @Transactional
     public void saveImg(MultipartFile file, Integer id) {
-        if (file != null) {
+        if (!file.isEmpty()) {
             Task task = get(id, SecurityUtil.authUserId());
             File uploadDir = new File("/Users/valerijzarkov/Downloads/Diplom/src/main/webapp/resources/files/images");
             String uuidFile = UUID.randomUUID().toString();
             String resultFileName = uuidFile + "." + file.getOriginalFilename();
-            String longPath = "/Users/valerijzarkov/Downloads/Diplom/src/main/webapp/";
+            String longPath = "/Users/valerijzarkov/Downloads/Diplom/src/main/webapp/resources/files/images/";
             try {
                 file.transferTo(new File(uploadDir + "/" + resultFileName));
-                if (Files.exists(Paths.get(longPath + task.getImg_path()))) {
+                if (Files.exists(Paths.get(longPath + task.getImg_path()))  && !task.getImg_path().equals("default.jpeg")) {
                     Files.delete(Paths.get(longPath + task.getImg_path()));
                 }
-                task.setImg_path("resources/files/images/" + resultFileName);
+                task.setImg_path(resultFileName);
                 taskRepository.save(task, SecurityUtil.authUserId());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -154,8 +149,8 @@ public class TaskService extends HttpServlet {
     }
 
     public void setShortDescription(Integer id, String shortDescription, int userId) {
-        Task task = taskRepository.get(id,userId);
+        Task task = taskRepository.get(id, userId);
         task.setShortDescription(shortDescription);
-        taskRepository.save(task,userId);
+        taskRepository.save(task, userId);
     }
 }

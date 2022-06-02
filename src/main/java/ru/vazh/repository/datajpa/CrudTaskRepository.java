@@ -11,6 +11,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 @Transactional(readOnly = true)
 public interface CrudTaskRepository extends JpaRepository<Task, Integer> {
+
+
     List<Task> getAllByUserId(int userId);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Task t WHERE t.id=:id AND t.user.id=:userId")
+    int delete(@Param("id") int id, @Param("userId") int userId);
 
 }

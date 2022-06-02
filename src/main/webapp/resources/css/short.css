@@ -1,0 +1,79 @@
+.container label {
+    font-weight: 400;
+    font-size: 1.2em;
+}
+
+textarea {
+    resize: none;
+    background-color: #DCDCDC;
+}
+
+.in1 {
+    justify-content: center;
+    align-items: center;
+    /*color: #ED872D;*/
+    color: #3D3D3B;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.in1::placeholder {
+    color: #3D3D3B;
+    opacity: 0.4;
+}
+
+.in1:focus {
+    color: #3D3D3B;
+    background-color: #DCDCDC;
+    border-color: #D3D3D3;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(237, 135, 45, 0.6);
+}
+
+.in2 {
+    color: #3D3D3B;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: 400;
+    background-color: #DCDCDC;
+    margin: 5px;
+}
+
+.in2::placeholder {
+    color: #3D3D3B;
+    opacity: 0.4;
+}
+
+.in2:focus {
+    color: #3D3D3B;
+    background-color: #DCDCDC;
+    border-color: #bdbdbd;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(237, 135, 45, 0.6);
+}
+.container button {
+    margin: 50px;
+    float: left;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    background: #3D3D3B;
+    color: #D3D3D3;
+    padding: 12px 32px;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: 500;
+    border: none;
+}
+
+#signIn:hover {
+    background-color: #ED872D;
+}
+
+.in3 {
+    justify-content: center;
+    align-items: center;
+    color: #3D3D3B;
+    text-decoration: none;
+    text-transform: uppercase;
+}

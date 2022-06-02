@@ -2,24 +2,17 @@ package ru.vazh.web.controller.task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.vazh.model.Task;
 import ru.vazh.service.TaskService;
-import ru.vazh.util.TaskUtil;
 import ru.vazh.web.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 import java.util.Objects;
 
-import static ru.vazh.util.ValidationUtil.assureIdConsistent;
-import static ru.vazh.util.ValidationUtil.checkNew;
 import static ru.vazh.web.controller.task.TaskRestController.REST_URL;
 
 @Controller
@@ -37,7 +30,13 @@ public class TaskRestController{
     @GetMapping("/open")
     public String open(HttpServletRequest request, Model model) {
         model.addAttribute("task", get(getId(request)));
-        return "taskForm";
+        return "taskForm2";
+    }
+
+    @GetMapping("/delete")
+    public String delete(HttpServletRequest request) {
+        service.delete(getId(request));
+        return "redirect:/tasks";
     }
 
     public Task get(int id) {

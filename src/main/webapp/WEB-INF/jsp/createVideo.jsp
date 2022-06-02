@@ -1,44 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>MediaCapture and Streams API</title>
-    <meta name="viewport" content="width=device-width">
-    <%--    <link rel="stylesheet" href="main.css">--%>
-    <%--    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css?v=2">--%>
-    <link rel="stylesheet" href="webjars/bootstrap/4.6.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="webjars/noty/3.1.4/demo/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="webjars/datatables/1.11.4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="webjars/noty/3.1.4/lib/noty.css"/>
-
-    <script src="webjars/jquery/3.6.0/jquery.min.js" defer></script>
-    <script src="webjars/bootstrap/4.6.1/js/bootstrap.min.js" defer></script>
-    <script src="webjars/datatables/1.11.4/js/jquery.dataTables.min.js" defer></script>
-    <script src="webjars/datatables/1.11.4/js/dataTables.bootstrap4.min.js" defer></script>
+    <jsp:include page="fragments/headTags.jsp"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/vidStyle.css">
     <script src="webjars/noty/3.1.4/lib/noty.min.js" defer></script>
+    <link rel="stylesheet" href="webjars/noty/3.1.4/lib/noty.css"/>
+    <title><spring:message code="app.create"/></title>
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/images/logo.png">
 </head>
 <body>
 <header>
-    <h1>MediaCapture, MediaRecorder and Streams API</h1>
+    <a href="${pageContext.request.contextPath}/" class="logo"><spring:message code="app.title"/></a>
+    <div id="toggle" onclick="toggle()"></div>
 </header>
-<main>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit molestiae itaque facere totam saepe tempore
-        esse temporibus, quae reprehenderit aliquid iusto ea laborum, iure eligendi odio exercitationem sapiente illum
-        quos.</p>
+<div id="navigation">
+    <ul>
+        <sec:authorize access="isAuthenticated()">
+            <li><a href="${pageContext.request.contextPath}/"><spring:message code="app.general"/></a></li>
+            <sec:authorize access="hasRole('ROLE_ADMIN')">
+                <li><a href="${pageContext.request.contextPath}/admin/users"><spring:message code="app.users"/></a></li>
+            </sec:authorize>
+            <li><a href="${pageContext.request.contextPath}/profile"><spring:message code="app.profile"/></a></li>
+        </sec:authorize>
+        <sec:authorize access="isAuthenticated()">
+            <li><a href="${pageContext.request.contextPath}/tasks"><spring:message code="app.tasks"/></a></li>
+            <li><a id="fao" data-toggle="modal" data-target="#tutorial"><spring:message code="app.fao"/></a></li>
+            <li><a href="${pageContext.request.contextPath}/logout"><spring:message code="app.logout"/></a></li>
+        </sec:authorize>
+        <sec:authorize access="isAnonymous()">
+            <li><a href="${pageContext.request.contextPath}/login"><spring:message code="app.login"/></a></li>
+            <li><a href="${pageContext.request.contextPath}/registration"><spring:message code="app.register"/></a></li>
+        </sec:authorize>
+        <li><a href="${requestScope['javax.servlet.forward.request_uri']}?lang=en">en</a></li>
+        <li><a href="${requestScope['javax.servlet.forward.request_uri']}?lang=ru">ru</a></li>
+    </ul>
+</div>
 
+<div class="container">
     <p>
-        <button id="btnStart">START RECORDING</button>
+        <button id="btnStart"><spring:message code="app.startRec"/></button>
         <br/>
-        <%--        <button class="tiny button hidden" id="btnStop">STOP REC</button>--%>
-        <button id="btnStop" hidden>STOP RECORDING</button>
+        <button id="btnStop" hidden><spring:message code="app.stopRec"/></button>
     </p>
     <video id="vid1" controls hidden></video>
 
-    <video id="vid2" controls></video>
-    <!-- could save to canvas and do image manipulation and saving too -->
+    <video id="vid2" controls hidden></video>
     <input id="ajaxfile" hidden type="file"><br>
-    <button onclick="uploadFileAjax()">Upload</button>
-</main>
+    <button onclick="uploadFileAjax()"><spring:message code="app.upload"/></button>
+</div>
+
+<div class="modal fade" id="tutorial" tabindex="-1" role="dialog"
+     aria-labelledby="tutorial" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tutorialLable"><spring:message code="app.fao"/></h5>
+                <button class="close" type="button" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="${pageContext.request.contextPath}/resources/images/<spring:message code="app.faoImg"/>"/>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     let blobData = null;
 
@@ -53,6 +83,7 @@
     // width: 1280, height: 720  -- preference only
     // facingMode: {exact: "user"}
     // facingMode: "environment"
+
 
     //handle older browsers that might implement getUserMedia in some way
     if (navigator.mediaDevices === undefined) {
@@ -92,7 +123,7 @@
 
             video.onloadedmetadata = function (ev) {
                 //show in the video element what is being captured by the webcam
-                video.pause();
+                //video1.pause();
             };
 
             //add listeners for saving video/audio
@@ -103,15 +134,16 @@
             let mediaRecorder = new MediaRecorder(mediaStreamObj);
             let chunks = [];
 
+            video1.controls = false;
+
             start.addEventListener('click', (ev) => {
+                video.hidden = false;
                 start.hidden = true;
                 stop.hidden = false;
                 video2.hidden = true;
-                video1.hidden = false;
                 video2.pause();
-                video.play();
-                // video1.play();
                 mediaRecorder.start();
+                video1.play();
                 console.log(mediaRecorder.state);
             })
             stop.addEventListener('click', (ev) => {
@@ -128,10 +160,10 @@
             }
             mediaRecorder.onstop = (ev) => {
                 let blob = new Blob(chunks, {'type': 'video/mp4'});
-                blobData = blob;
                 chunks = [];
                 let videoURL = window.URL.createObjectURL(blob);
                 video2.src = videoURL;
+                blobData = blob;
             }
         })
         .catch(function (err) {
@@ -148,6 +180,7 @@
             );
             formData.append('video', myFile);
             formData.append('id', ${id});
+
             $.ajax({
                 url: '${pageContext.request.contextPath}/createDone',
                 type: 'POST',
@@ -156,28 +189,43 @@
                 processData: false,
                 contentType: false
             }).done(function () {
-                alert("Video saved");
-                window.location.href = "${pageContext.request.contextPath}/tasks";
+                successNoty();
+                setTimeout(() => {
+                    window.location.href = "${pageContext.request.contextPath}/tasks";
+                }, 1500)
             }).fail(function () {
-                alert("Error connecting");
+                alert("<spring:message code="tasks.error.connecting"/>");
             });
         } else {
-            alert("No changes saved");
-            window.location.href = "${pageContext.request.contextPath}/tasks";
+            alertNoty();
+            setTimeout(() => {
+                window.location.href = "${pageContext.request.contextPath}/tasks";
+            }, 1500)
         }
     }
 
-    /*********************************
-     getUserMedia returns a Promise
-     resolve - returns a MediaStream Object
-     reject returns one of the following errors
-     AbortError - generic unknown cause
-     NotAllowedError (SecurityError) - user rejected permissions
-     NotFoundError - missing media track
-     NotReadableError - user permissions given but hardware/OS error
-     OverconstrainedError - constraint video settings preventing
-     TypeError - audio: false, video: false
-     *********************************/
+    function successNoty() {
+        new Noty({
+            text: "<spring:message code="tasks.noty.videoChanged"/>",
+            type: 'success',
+            layout: "bottomRight",
+            timeout: 1000
+        }).show();
+    }
+
+    function alertNoty() {
+        new Noty({
+            text: "<spring:message code="tasks.noty.noChanges"/>",
+            type: 'alert',
+            layout: "bottomRight",
+            timeout: 1000
+        }).show();
+    }
+
+    function toggle() {
+        var nav = document.getElementById('navigation');
+        nav.classList.toggle('active');
+    }
 </script>
 </body>
 </html>

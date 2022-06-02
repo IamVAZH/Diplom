@@ -35,15 +35,15 @@ public abstract class AbstractUserController {
         return service.create(user);
     }
 
-    public void delete(int id) {
+    public String delete(int id) {
         log.info("delete {}", id);
         service.delete(id);
+        return null;
     }
 
-    public void update(User user, int id) {
-        log.info("update {} with id={}", user, id);
-        assureIdConsistent(user, id);
+    public String update(User user, int id) {
         service.update(user);
+        return null;
     }
 
     public User getByMail(String email) {

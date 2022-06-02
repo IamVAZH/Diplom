@@ -1,23 +1,37 @@
 package ru.vazh.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
+import ru.vazh.AuthUser;
 import ru.vazh.model.Task;
 import ru.vazh.model.User;
 import ru.vazh.service.TaskService;
+import ru.vazh.service.UserService;
 import ru.vazh.web.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 public class RootController {
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 
     @GetMapping("/")
     public String root() {
@@ -26,26 +40,26 @@ public class RootController {
 
     @GetMapping("/conseption")
     public String conseption() {
-        return "conseption";
+        return "conseption2";
     }
 
     @GetMapping("/audio")
     public String audio(HttpServletRequest request, Model model) {
         model.addAttribute("id", Integer.parseInt(request.getParameter("id")));
         model.addAttribute("savedAudio", taskService.getAudioPath(Integer.parseInt(request.getParameter("id")), SecurityUtil.authUserId()));
-        return "audio";
+        return "audio2";
     }
 
     @PostMapping("/createAudio")
     public String createAudio(HttpServletRequest request, Model model) {
         Task task = taskService.create(new Task(LocalDateTime.now(),
-                        "resources/files/default/default.jpeg",
-                        request.getParameter("text"),
-                        "",
+                        "default.jpeg",
                         request.getParameter("name"),
+                        "",
+                        request.getParameter("text"),
                         null,
-                        "resources/files/default/default.mp3",
-                        "resources/files/default/default.mp4"),
+                        "default.mp3",
+                        "default.mp4"),
                 SecurityUtil.authUserId());
         model.addAttribute("id", task.getId());
         return "createAudio";
@@ -67,11 +81,11 @@ public class RootController {
     @PostMapping("/createDone")
     public String createDone(@RequestParam MultipartFile video, @RequestParam Integer id) {
         saveVideo(video, id);
-        return "redirect:tasks";
+        return "tasks";
     }
 
+
     @PostMapping("/audio")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void saveAudio(@RequestParam MultipartFile audio, @RequestParam Integer id) {
         taskService.saveAudio(audio, id);
     }
@@ -80,7 +94,7 @@ public class RootController {
     public String video(HttpServletRequest request, Model model) {
         model.addAttribute("id", Integer.parseInt(request.getParameter("id")));
         model.addAttribute("savedVideo", taskService.getVideoPath(Integer.parseInt(request.getParameter("id")), SecurityUtil.authUserId()));
-        return "video";
+        return "video2";
     }
 
     @PostMapping("/video")
@@ -90,6 +104,7 @@ public class RootController {
 
     @GetMapping("/tasks")
     public String tasks(Model model) {
+//        AuthUser.safeGet();
         model.addAttribute("tasks", taskService.getAll(SecurityUtil.authUserId()));
         return "tasks";
     }
@@ -102,30 +117,69 @@ public class RootController {
         String shortDescription = request.getParameter("shortDescription");
         int id = Integer.parseInt(request.getParameter("id"));
         taskService.updateForm(date, name, taskText, id, shortDescription);
-        return "redirect:tasks";
-    }
-
-    @GetMapping("/tutorial")
-    public String tutorial() {
-        return "tutorial";
+        return "redirect:/tasks";
     }
 
     @GetMapping("/img")
     public String img(HttpServletRequest request, Model model) {
         model.addAttribute("id", Integer.parseInt(request.getParameter("id")));
         model.addAttribute("savedImg", taskService.getImgPath(Integer.parseInt(request.getParameter("id")), SecurityUtil.authUserId()));
-        return "img";
+        return "img2";
     }
 
     @PostMapping("/img")
     public String img(@RequestParam MultipartFile image, @RequestParam Integer id) {
         taskService.saveImg(image, id);
-        return "redirect:tasks";
+        return "redirect:/tasks";
+    }
+
+    @GetMapping("/t")
+    public String t() {
+        return "t";
     }
 
     @GetMapping("/registration")
-    public String registration() {
-        return "registration";
+    public String registration(ModelMap model) {
+        model.addAttribute("user", new User());
+        model.addAttribute("register", true);
+        return "profile";
     }
+
+    @PostMapping("/registration")
+    public String saveRegister(@Validated User user, BindingResult result, SessionStatus status, ModelMap model) {
+        if (result.hasErrors()) {
+            model.addAttribute("register", true);
+            return "profile";
+        }
+        status.setComplete();
+        userService.create(user);
+        status.setComplete();
+        return "redirect:/login?message=Registered&username=" + user.getEmail();
+    }
+
+    @GetMapping("/profile")
+    public String profile(ModelMap model) {
+        model.put("user", SecurityUtil.safeGet().getUser());
+        return "profile";
+    }
+
+    @PostMapping("/profile")
+    public String updateProfile(@Valid User user, BindingResult result, SessionStatus status) {
+        if (result.hasErrors()) {
+            return "profile";
+        } else {
+            userService.update(user);
+            SecurityUtil.get().update(user);
+            status.setComplete();
+            return "redirect:/tasks";
+        }
+    }
+
+    @GetMapping("/admin/users")
+    public String getAllUsers(Model model) {
+        model.addAttribute("users", userService.getAll());
+        return "users";
+    }
+
 
 }

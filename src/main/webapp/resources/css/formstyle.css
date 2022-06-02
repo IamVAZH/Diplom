@@ -1,0 +1,326 @@
+body {
+    background-color: #D3D3D3;
+}
+.container {
+    margin: 40px;
+    padding-top: 90px;
+    max-width: unset;
+    /*margin: 0;*/
+    width: 92vw;
+    /*100*/
+    height: 196vh;
+    /*205*/
+    display: grid;
+
+    grid-template-columns: 300px 1fr 1fr;
+    grid-template-rows: 150px 150px 0.35fr 0.32fr 0.25fr 0.05fr 1fr 0.02fr 0.02fr;
+
+    gap: 0px;
+
+    box-sizing: border-box;
+
+    /*border: 1px solid #b6a5a5;*/
+}
+
+.container div {
+    padding: 10px;
+    border: 0 solid #3D3D3B;
+}
+
+.container .img {
+    /*border-bottom: 1px solid #b6a5a5;*/
+}
+
+.container .title {
+    /*border-bottom: 1px solid #b6a5a5;*/
+}
+
+.container .mainText {
+    /*border-bottom: 1px solid #b6a5a5;*/
+}
+
+.container .description {
+    /*border-bottom: 1px solid #b6a5a5;*/
+}
+.container .video {
+    /*border-bottom: 1px solid #b6a5a5;*/
+}
+
+
+.img {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: 0.5s ease-in-out;
+}
+
+.img:hover img {
+    transform: scale(1.1);
+}
+.data {
+    background: #D3D3D3;
+    display: flex;
+    grid-column-start: 2;
+    grid-column-end: 4;
+    justify-content: center;
+    align-items: center;
+    color: #ED872D;
+    text-decoration: none;
+    font-size: 2em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.title {
+    background: #D3D3D3;
+    display: flex;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column-start: 2;
+    grid-column-end: 4;
+    justify-content: center;
+    align-items: center;
+    color: #ED872D;
+    text-decoration: none;
+    font-size: 2em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.mainText {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 3;
+    grid-row-end: 5;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ED872D;
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: 300;
+    background-color: #DCDCDC;
+    margin: 5px;
+}
+
+.description {
+    margin: 5px;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 200;
+    background-color: #DCDCDC;
+}
+
+.audio {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    background-color: #D3D3D3;
+    font-weight: 600;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    text-decoration: none;
+}
+
+.video {
+    font-size: 1.5em;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+
+}
+.confirm {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.confirm button {
+
+    position: relative;
+    display: flex;
+    background: #3D3D3B;
+    color: #D3D3D3;
+    padding: 12px 32px;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: 500;
+    border: none;
+}
+/*div.item {*/
+/*    vertical-align: top;*/
+/*    display: inline-block;*/
+/*    text-align: center;*/
+/*    width: 120px;*/
+/*}*/
+/*img {*/
+/*    width: 100px;*/
+/*    height: 100px;*/
+/*    background-color: grey;*/
+/*}*/
+
+
+/**,*/
+/**::before,*/
+/**::after {*/
+/*    box-sizing: border-box;*/
+/*}*/
+
+/*body {*/
+/*    margin: 0;*/
+/*    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";*/
+/*    font-size: 1rem;*/
+/*    font-weight: 400;*/
+/*    line-height: 1.5;*/
+/*    color: #212529;*/
+/*    background-color: #fff;*/
+/*    -webkit-text-size-adjust: 100%;*/
+/*    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);*/
+/*}*/
+
+a {
+    color: #ED872D;
+}
+
+h1 {
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+p {
+    font-weight: 500;
+}
+
+/* text-field */
+/*.text-field {*/
+/*    margin-bottom: 1rem;*/
+/*}*/
+
+.text-field__label {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+/*    display: flex;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column-start: 2;
+    grid-column-end: 4;
+    justify-content: center;
+    align-items: center;
+    color: #ED872D;
+    text-decoration: none;
+    font-size: 2em;
+    font-weight: 600;
+    text-transform: uppercase;
+*/
+.text-field__input {
+    display: flex;
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    text-align: center;
+    /*block*/
+    width: 100%;
+    /*height: calc(2.25rem + 2px);*/
+    height: 100%;
+    padding: 0.375rem 0.75rem;
+    font-family: inherit;
+    font-size: 2em;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #3D3D3B;
+    background: #D3D3D3;
+    background-clip: padding-box;
+    border: 0 solid #D3D3D3;
+    border-radius: 0;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+textarea {
+    resize: none;
+    background-color: #DCDCDC;
+}
+
+input[type="datetime-local"] {
+color: #ED872D;
+    background: #D3D3D3;
+
+}
+
+.text-field__input::placeholder {
+    color: #3D3D3B;
+    opacity: 0.4;
+}
+
+.text-field__input:focus {
+    color: #3D3D3B;
+    background-color: #DCDCDC;
+    border-color: #D3D3D3;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(237, 135, 45, 0.6);
+}
+
+.text-field__input:disabled,
+.text-field__input[readonly] {
+    background-color: #D3D3D3;
+    opacity: 1;
+}
+
+.text-field__input1 {
+    display: flex;
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    text-align: left;
+    /*block*/
+    width: 100%;
+    /*height: calc(2.25rem + 2px);*/
+    height: 100%;
+    padding: 0.375rem 0.75rem;
+    font-family: inherit;
+    font-size: 1.75em;
+    line-height: 1.5;
+    color: #3D3D3B;
+    background-clip: padding-box;
+    border: 0 solid #bdbdbd;
+    border-radius: 0;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.text-field__input1::placeholder {
+    color: #3D3D3B;
+    opacity: 0.4;
+}
+
+.text-field__input1:focus {
+    color: #3D3D3B;
+    background-color: #DCDCDC;
+    border-color: #bdbdbd;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(237, 135, 45, 0.6);
+}

@@ -22,7 +22,7 @@ public class DataJpaTaskRepository implements TaskRepository {
 
     @Override
     public boolean delete(int id, int userId) {
-        return false;
+        return crudTaskRepository.delete(id, userId) != 0;
     }
 
     @Override
@@ -49,5 +49,14 @@ public class DataJpaTaskRepository implements TaskRepository {
         }
         task.setUser(crudUserRepository.getOne(userId));
         return crudTaskRepository.save(task);
+    }
+
+    @Transactional
+    public Task saveAndFlush(Task task, int userId) {
+        if (!task.isNew() && get(task.getId(), userId) == null) {
+            return null;
+        }
+        task.setUser(crudUserRepository.getOne(userId));
+        return crudTaskRepository.saveAndFlush(task);
     }
 }

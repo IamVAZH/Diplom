@@ -1,44 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>MediaCapture and Streams API</title>
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="webjars/bootstrap/4.6.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="webjars/noty/3.1.4/demo/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="webjars/datatables/1.11.4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="webjars/noty/3.1.4/lib/noty.css"/>
-
-    <script src="webjars/jquery/3.6.0/jquery.min.js" defer></script>
-    <script src="webjars/bootstrap/4.6.1/js/bootstrap.min.js" defer></script>
-    <script src="webjars/datatables/1.11.4/js/jquery.dataTables.min.js" defer></script>
-    <script src="webjars/datatables/1.11.4/js/dataTables.bootstrap4.min.js" defer></script>
+    <jsp:include page="fragments/headTags.jsp"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/audStyle.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/conseptionStyle.css">
     <script src="webjars/noty/3.1.4/lib/noty.min.js" defer></script>
+    <link rel="stylesheet" href="webjars/noty/3.1.4/lib/noty.css"/>
+    <title><spring:message code="app.create"/></title>
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/images/logo.png">
 </head>
 <body>
 <header>
-    <h1>MediaCapture, MediaRecorder and Streams API</h1>
+    <a href="${pageContext.request.contextPath}/" class="logo"><spring:message code="app.title"/></a>
+    <div id="toggle" onclick="toggle()"></div>
 </header>
-<main>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit molestiae itaque facere totam saepe tempore
-        esse temporibus, quae reprehenderit aliquid iusto ea laborum, iure eligendi odio exercitationem sapiente illum
-        quos.</p>
+<div id="navigation">
+    <ul>
+        <sec:authorize access="isAuthenticated()">
+            <li><a href="${pageContext.request.contextPath}/"><spring:message code="app.general"/></a></li>
+            <sec:authorize access="hasRole('ROLE_ADMIN')">
+                <li><a href="${pageContext.request.contextPath}/admin/users"><spring:message code="app.users"/></a></li>
+            </sec:authorize>
+            <li><a href="${pageContext.request.contextPath}/profile"><spring:message code="app.profile"/></a></li>
+        </sec:authorize>
+        <sec:authorize access="isAuthenticated()">
+            <li><a href="${pageContext.request.contextPath}/tasks"><spring:message code="app.tasks"/></a></li>
+            <li><a id="fao" data-toggle="modal" data-target="#tutorial"><spring:message code="app.fao"/></a></li>
+            <li><a href="${pageContext.request.contextPath}/logout"><spring:message code="app.logout"/></a></li>
+        </sec:authorize>
+        <sec:authorize access="isAnonymous()">
+            <li><a href="${pageContext.request.contextPath}/login"><spring:message code="app.login"/></a></li>
+            <li><a href="${pageContext.request.contextPath}/registration"><spring:message code="app.register"/></a></li>
+        </sec:authorize>
+        <li><a href="${requestScope['javax.servlet.forward.request_uri']}?lang=en">en</a></li>
+        <li><a href="${requestScope['javax.servlet.forward.request_uri']}?lang=ru">ru</a></li>
+    </ul>
+</div>
 
-    <textarea id="sd" name="shortDescription" rows="4" cols="80" required>${task.shortDescription}</textarea>
+
+<div class="container">
+    <label id="titleLable" for="sd"><spring:message code="creation.short"/></label>
+    <textarea class="in2" id="sd" name="shortDescription" rows="10" cols="60"
+              required>${task.shortDescription}</textarea>
     <p>
-        <button id="btnStart">START RECORDING</button>
+        <button id="btnStart"><spring:message code="app.startRec"/></button>
     </p>
     &nbsp;&nbsp;&nbsp;&nbsp;
     <p>
-        <button id="btnStop" hidden>STOP RECORDING</button>
+        <button id="btnStop" hidden><spring:message code="app.stopRec"/></button>
     </p>
     <audio id="vid2" controls></audio>
 
     <input id="ajaxfile" hidden type="file"><br>
-    <button onclick="uploadFileAjax()">Upload</button>
-    <!-- could save to canvas and do image manipulation and saving too -->
-</main>
+    <button onclick="uploadFileAjax()"><spring:message code="app.upload"/></button>
+</div>
+
+<div class="modal fade" id="tutorial" tabindex="-1" role="dialog"
+     aria-labelledby="tutorial" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tutorialLable"><spring:message code="app.fao"/></h5>
+                <button class="close" type="button" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="${pageContext.request.contextPath}/resources/images/<spring:message code="app.faoImg"/>"/>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     let blobData = null;
     let shortDesc = document.getElementById("sd");
@@ -122,7 +157,7 @@
 
 
     async function uploadFileAjax() {
-        if (blobData != null) {
+        if (blobData != null || shortDesc.value !== '') {
             let formData = new FormData();
             const myFile = new File(
                 [blobData],
@@ -141,28 +176,40 @@
                 processData: false,
                 contentType: false
             }).done(function () {
-                alert("Audio saved");
-                window.location.href = "${pageContext.request.contextPath}/createVideo?id=${id}";
+                successNoty();
+                setTimeout(() => {
+                    window.location.href = "${pageContext.request.contextPath}/createVideo?id=${id}";
+                }, 1500)
             }).fail(function () {
-                alert("Error connecting");
+                alert("<spring:message code="tasks.error.connecting"/>");
             });
         } else {
-            alert("No changes saved");
-            window.location.href = "${pageContext.request.contextPath}/tasks";
+            alertNoty()
         }
     }
 
-    /*********************************
-     getUserMedia returns a Promise
-     resolve - returns a MediaStream Object
-     reject returns one of the following errors
-     AbortError - generic unknown cause
-     NotAllowedError (SecurityError) - user rejected permissions
-     NotFoundError - missing media track
-     NotReadableError - user permissions given but hardware/OS error
-     OverconstrainedError - constraint video settings preventing
-     TypeError - audio: false, video: false
-     *********************************/
+    function successNoty() {
+        new Noty({
+            text: "<spring:message code="tasks.noty.audioChanged"/>",
+            type: 'success',
+            layout: "bottomRight",
+            timeout: 1000
+        }).show();
+    }
+
+    function alertNoty() {
+        new Noty({
+            text: "<spring:message code="tasks.noty.noChanges"/>",
+            type: 'alert',
+            layout: "bottomRight",
+            timeout: 1000
+        }).show();
+    }
+
+    function toggle() {
+        var nav = document.getElementById('navigation');
+        nav.classList.toggle('active');
+    }
 </script>
 </body>
 </html>
